@@ -38,10 +38,12 @@ type kafka struct {
 
 type user struct {
 	Activation struct {
-		TemplatePath string `mapstructure:"templatePath"`
+		EmailTemplatePath string `mapstructure:"emailTemplatePath"`
+		SmsTemplatePath   string `mapstructure:"smsTemplatePath"`
 	} `mapstructure:"activation"`
 	PasswordReset struct {
-		TemplatePath string `mapstructure:"templatePath"`
+		EmailTemplatePath string `mapstructure:"emailTemplatePath"`
+		SmsTemplatePath   string `mapstructure:"smsTemplatePath"`
 	} `mapstructure:"passwordReset"`
 }
 

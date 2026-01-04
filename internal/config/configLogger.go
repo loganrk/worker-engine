@@ -1,13 +1,5 @@
 package config
 
-type Logger interface {
-	GetLoggerLevel() string
-	GetLoggerEncodingMethod() string
-	GetLoggerEncodingCaller() bool
-	GetLoggerPath() string
-	GetLoggerErrorPath() string
-}
-
 func (l logger) GetLoggerLevel() string {
 	return l.Level
 

@@ -2,16 +2,6 @@ package config
 
 import "time"
 
-type Email interface {
-	GetMailjetAPIKey() string
-	GetMailjetAPISecret() string
-	GetMailjetFromEmail() string
-	GetMailjetFromName() string
-	GetMailjetRateLimitEnabled() bool
-	GetMailjetRateLimitMaxRequest() int
-	GetMailjetRateLimitWindowSize() time.Duration
-}
-
 func (e email) GetMailjetAPIKey() string {
 	return e.Mailjet.APIKey
 }

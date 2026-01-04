@@ -1,12 +1,5 @@
 package config
 
-type Kafka interface {
-	GetBrokers() []string
-	GetActivationTopic() string
-	GetPasswordResetTopic() string
-	GetConsumerGroupName() string
-}
-
 func (k kafka) GetBrokers() []string {
 	return k.Brokers
 }

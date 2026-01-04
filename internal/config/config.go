@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 
+	"github.com/loganrk/worker-engine/internal/core/port"
 	"github.com/spf13/viper"
 )
 
@@ -10,15 +11,8 @@ type File struct {
 	Name string
 	Ext  string
 }
-type App interface {
-	GetAppName() string
-	GetLogger() Logger
-	GetKafka() Kafka
-	GetUser() User
-	GetEmail() Email
-}
 
-func StartConfig(path string, file File) (App, error) {
+func StartConfig(path string, file File) (port.ConfApp, error) {
 	var appConfig app
 
 	var viperIns = viper.New()
@@ -44,17 +38,17 @@ func (a app) GetAppName() string {
 	return a.Application.Name
 }
 
-func (a app) GetLogger() Logger {
+func (a app) GetLogger() port.ConfLogger {
 	return a.Logger
 }
 
-func (a app) GetUser() User {
+func (a app) GetUser() port.ConfUser {
 	return a.User
 }
 
-func (a app) GetKafka() Kafka {
+func (a app) GetKafka() port.ConfKafka {
 	return a.Kafka
 }
-func (a app) GetEmail() Email {
+func (a app) GetEmail() port.ConfEmail {
 	return a.Email
 }

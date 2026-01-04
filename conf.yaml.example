@@ -12,9 +12,11 @@ logger:
 
 user:
   activation:
-    templatePath: "/path/to/activation-template.html"
+    emailTemplatePath: "/path/to/email-activation-template.html"
+    smsTemplatePath: "/path/to/sms-activation-template.txt"
   passwordReset:
-    templatePath: "/path/to/password-reset-template.html"
+    emailTemplatePath: "/path/to/email-password-reset-template.html"
+    smsTemplatePath: "/path/to/sms-activation-template.txt"
 
 kafka:
   brokers:

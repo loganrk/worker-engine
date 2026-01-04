@@ -2,14 +2,15 @@ package port
 
 import (
 	"context"
+	"time"
 )
 
 type Hanlder interface {
 	ActivationEmail(to, subject string, macros map[string]string) error
-	ActivationPhone(to string, macros map[string]string) error
+	ActivationSms(contryCode, to string, macros map[string]string) error
 
 	PasswordResetEmail(to, subject string, macros map[string]string) error
-	PasswordResetPhone(to string, macros map[string]string) error
+	PasswordResetSms(contryCode, to string, macros map[string]string) error
 
 	ActivationError(ctx context.Context, err error)
 	PasswordResetError(ctx context.Context, err error)
@@ -65,7 +66,49 @@ type Emailer interface {
 	SendEmail(to, subject, body string) error
 }
 
+type SmsSender interface {
+	SendSMS(contryCode, to, body string) error
+}
 type RateLimiter interface {
 	Allow() bool
 	WaitUntilAllowed(ctx context.Context) error
+}
+
+type ConfApp interface {
+	GetAppName() string
+	GetLogger() ConfLogger
+	GetKafka() ConfKafka
+	GetUser() ConfUser
+	GetEmail() ConfEmail
+}
+type ConfEmail interface {
+	GetMailjetAPIKey() string
+	GetMailjetAPISecret() string
+	GetMailjetFromEmail() string
+	GetMailjetFromName() string
+	GetMailjetRateLimitEnabled() bool
+	GetMailjetRateLimitMaxRequest() int
+	GetMailjetRateLimitWindowSize() time.Duration
+}
+
+type ConfKafka interface {
+	GetBrokers() []string
+	GetActivationTopic() string
+	GetPasswordResetTopic() string
+	GetConsumerGroupName() string
+}
+
+type ConfLogger interface {
+	GetLoggerLevel() string
+	GetLoggerEncodingMethod() string
+	GetLoggerEncodingCaller() bool
+	GetLoggerPath() string
+	GetLoggerErrorPath() string
+}
+
+type ConfUser interface {
+	GetActivationEmailTemplatePath() string
+	GetPasswordResetEmailTemplatePath() string
+	GetPasswordResetSmsTemplatePath() string
+	GetActivationSmsTemplatePath() string
 }

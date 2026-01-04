@@ -18,10 +18,10 @@ func (h *handler) ActivationEmail(to, subject string, macros map[string]string) 
 	return nil
 }
 
-// ActivationPhone processes a user activation via phone (SMS).
-func (h *handler) ActivationPhone(to string, macros map[string]string) error {
+// ActivationSms processes a user activation via phone (SMS).
+func (h *handler) ActivationSms(contryCode, to string, macros map[string]string) error {
 	ctx := context.Background()
-	err := h.usecases.User.ActivationPhone(ctx, to, macros)
+	err := h.usecases.User.ActivationSms(ctx, contryCode, to, macros)
 	if err != nil {
 		h.logger.Errorw(ctx, "Failed to process Activation Phone", "error", err)
 		return err
@@ -45,11 +45,11 @@ func (h *handler) PasswordResetEmail(to, subject string, macros map[string]strin
 	return nil
 }
 
-// PasswordResetPhone processes a password reset via phone (SMS).
-func (h *handler) PasswordResetPhone(to string, macros map[string]string) error {
+// PasswordResetSms processes a password reset via phone (SMS).
+func (h *handler) PasswordResetSms(contryCode, to string, macros map[string]string) error {
 	ctx := context.Background()
 
-	err := h.usecases.User.PasswordResetPhone(ctx, to, macros)
+	err := h.usecases.User.PasswordResetSms(ctx, contryCode, to, macros)
 	if err != nil {
 		h.logger.Errorw(ctx, "Failed to process Password Reset Phone", "error", err)
 		return err

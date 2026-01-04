@@ -9,15 +9,15 @@ import (
 
 	"github.com/joho/godotenv"
 
-	"github.com/loganrk/worker-engine/config"
+	"github.com/loganrk/worker-engine/internal/config"
 	"github.com/loganrk/worker-engine/internal/core/port"
 	userUsecase "github.com/loganrk/worker-engine/internal/core/usecase/user"
 
-	emailer "github.com/loganrk/worker-engine/internal/adapters/emailer/mailjet"
+	emailer "github.com/loganrk/worker-engine/internal/adapter/emailer/mailjet"
 
-	messageReceiver "github.com/loganrk/utils-go/adapters/message/kafka/consumer"
-	"github.com/loganrk/worker-engine/internal/adapters/handler"
-	slidingWindowRatelimit "github.com/loganrk/worker-engine/internal/adapters/rateLimiter/slidingWindow"
+	messageReceiver "github.com/loganrk/utils-go/adapterss/message/kafka/consumer"
+	"github.com/loganrk/worker-engine/internal/adapter/handler"
+	slidingWindowRatelimit "github.com/loganrk/worker-engine/internal/adapter/rateLimiter/slidingWindow"
 
 	cipher "github.com/loganrk/utils-go/adapters/cipher/aes"
 	logger "github.com/loganrk/utils-go/adapters/logger/zapLogger"
@@ -92,7 +92,7 @@ func initCipher() port.Cipher {
 }
 
 // initLogger initializes the zap logger with the provided configuration.
-func initLogger(conf config.Logger) (port.Logger, error) {
+func initLogger(conf port.ConfLogger) (port.Logger, error) {
 	loggerConf := logger.Config{
 		Level:          conf.GetLoggerLevel(),
 		Encoding:       conf.GetLoggerEncodingMethod(),
@@ -103,7 +103,7 @@ func initLogger(conf config.Logger) (port.Logger, error) {
 }
 
 // initMessageReceiver decrypts the Kafka broker URLs and returns a Kafka receiver instance.
-func initMessageReceiver(conf config.Kafka, appName string, handlerIns port.Hanlder, cipherIns port.Cipher) (port.MessageReceiver, error) {
+func initMessageReceiver(conf port.ConfKafka, appName string, handlerIns port.Hanlder, cipherIns port.Cipher) (port.MessageReceiver, error) {
 	var brokers []string
 
 	// Decrypt each broker address
@@ -122,11 +122,11 @@ func initMessageReceiver(conf config.Kafka, appName string, handlerIns port.Hanl
 	)
 
 	//Start message receiver consumers for different event types
-	err := messageReceiverIns.RegisterActivation(conf.GetActivationTopic(), handlerIns.ActivationPhone, handlerIns.ActivationEmail)
+	err := messageReceiverIns.RegisterActivation(conf.GetActivationTopic(), handlerIns.ActivationSms, handlerIns.ActivationEmail)
 	if err != nil {
 		return nil, err
 	}
-	err = messageReceiverIns.RegisterPasswordResetHandlers(conf.GetPasswordResetTopic(), handlerIns.PasswordResetPhone, handlerIns.PasswordResetEmail)
+	err = messageReceiverIns.RegisterPasswordResetHandlers(conf.GetPasswordResetTopic(), handlerIns.PasswordResetSms, handlerIns.PasswordResetEmail)
 	if err != nil {
 		return nil, err
 	}
@@ -136,7 +136,7 @@ func initMessageReceiver(conf config.Kafka, appName string, handlerIns port.Hanl
 }
 
 // initEmailer decrypts SMTP credentials and initializes the email sender.
-func initEmailer(conf config.Email, cipherIns port.Cipher) (port.Emailer, port.RateLimiter, error) {
+func initEmailer(conf port.ConfEmail, cipherIns port.Cipher) (port.Emailer, port.RateLimiter, error) {
 	// Decrypt host
 	apiKey, err := cipherIns.Decrypt(conf.GetMailjetAPIKey())
 	if err != nil {
@@ -166,7 +166,7 @@ func initHandler(logger port.Logger, services port.SvrList) port.Hanlder {
 }
 
 // initUserService creates a new instance of the user service/usecase.
-func initUserService(logger port.Logger, emailer port.Emailer, emailRatelimitIns port.RateLimiter, conf config.User) (port.UserSvr, error) {
+func initUserService(logger port.Logger, emailer port.Emailer, emailRatelimitIns port.RateLimiter, conf port.ConfUser) (port.UserSvr, error) {
 
 	// Create and return the user service
 	return userUsecase.New(conf, logger, emailer, emailRatelimitIns)
