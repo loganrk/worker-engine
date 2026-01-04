@@ -15,12 +15,12 @@ import (
 
 	emailer "github.com/loganrk/worker-engine/internal/adapter/emailer/mailjet"
 
-	messageReceiver "github.com/loganrk/utils-go/adapterss/message/kafka/consumer"
+	messageReceiver "github.com/loganrk/utils-go/adapter/message/kafka/consumer"
 	"github.com/loganrk/worker-engine/internal/adapter/handler"
 	slidingWindowRatelimit "github.com/loganrk/worker-engine/internal/adapter/rateLimiter/slidingWindow"
 
-	cipher "github.com/loganrk/utils-go/adapters/cipher/aes"
-	logger "github.com/loganrk/utils-go/adapters/logger/zapLogger"
+	cipher "github.com/loganrk/utils-go/adapter/cipher/aes"
+	logger "github.com/loganrk/utils-go/adapter/logger/zapLogger"
 )
 
 func main() {

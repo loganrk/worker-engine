@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/joho/godotenv v1.5.1
-	github.com/loganrk/utils-go v1.0.9
+	github.com/loganrk/utils-go v1.1.2
 	github.com/mailjet/mailjet-apiv3-go v0.0.0-20201009050126-c24bc15a9394
 	github.com/spf13/viper v1.19.0
 )
